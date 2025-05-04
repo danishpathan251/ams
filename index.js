@@ -11,7 +11,7 @@ app.use('/api/auth', authRoutes);
 
 // Example route
 app.get('/', (req, res) => {
-  res.send('Hello from Express! /api/auth/login /signup');
+  res.send('Hello from Express! Updated At: 17:30 ');
 });
 
 
