@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  'postgres',
+  'ams',
   'postgres',
   'danish',
   {

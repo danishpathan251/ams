@@ -3,7 +3,12 @@ const sequelize = require('../config/db');
 const bcrypt = require('bcrypt');
 
 const User = sequelize.define('User', {
-  fullName: {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  fullname: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -18,15 +23,15 @@ const User = sequelize.define('User', {
     allowNull: false,
     unique: true,
   },
-  password: { 
-    type: DataTypes.STRING, 
-    allowNull: false 
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
   role: {
     type: DataTypes.ENUM('admin', 'employee', 'manager'),
     allowNull: false,
     defaultValue: 'employee',
-  },
+  }
 }, {
   tableName: 'users',
   timestamps: true,
