@@ -18,7 +18,7 @@ app.use('/api/business', businessRoute);
 
 // Example route
 app.get('/', (req, res) => {
-  res.send('Hello from Express! Updated At: 17:37 ');
+  res.send('Hello from Express! Updated At: 12:20 ');
 });
 
 
