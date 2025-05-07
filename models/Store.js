@@ -1,6 +1,6 @@
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // adjust the path to your Sequelize config
+const sequelize = require('../config/db'); // adjust the path to your Sequelize config
 
 const Store = sequelize.define('Store', {
   id: {
@@ -8,11 +8,11 @@ const Store = sequelize.define('Store', {
     autoIncrement: true,
     primaryKey: true,
   },
-  businessId: {
+  businessid: {
     type: DataTypes.STRING, // Or DataTypes.UUID if your businesses use UUIDs
     allowNull: false,
   },
-  storeId: {
+  storeid: {
     type: DataTypes.STRING, // Or UUID
     allowNull: false,
     unique: true,

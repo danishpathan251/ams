@@ -10,7 +10,7 @@ const businessRoute = require('./routes/businessRoute');
 app.use(express.json());
 app.use(bodyParser.json());
 app.use('/api/auth', authRoutes);
-app.use('/api/attandence', attendanceRoute);
+app.use('/api/attandance', attendanceRoute);
 app.use('/api/store', storeRoute);
 app.use('/api/business', businessRoute);
 
