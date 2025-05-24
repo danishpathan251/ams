@@ -31,6 +31,8 @@ router.post('/stores', async (req, res) => {
     const store = await Store.create(req.body);
     res.status(201).json({ message: 'Store created successfully', store });
   } catch (err) {
+    console.log(err);
+    console.log(err.message);
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ message: 'Store ID must be unique', error: err.message });
     }
