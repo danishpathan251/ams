@@ -29,6 +29,10 @@ const Store = sequelize.define('Store', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   pincode: {
     type: DataTypes.STRING,
     allowNull: false,
