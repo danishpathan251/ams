@@ -78,7 +78,8 @@ router.delete('/businesses/:id', async (req, res) => {
 router.get('/businesses/businessId/:businessId', async (req, res) => {
   try {
     const { businessId } = req.params;
-    const business = await Business.findOne({ where: { businessId } });
+    const business = await Business.findOne({ where: { businessid:businessId } });
+    
 
     if (!business) {
       return res.status(404).json({ message: 'Business not found' });
