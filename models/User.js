@@ -27,6 +27,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  businessId:{
+    type:DataTypes.STRING,
+    allowNull:true,
+  },
   role: {
     type: DataTypes.ENUM('admin', 'employee', 'manager'),
     allowNull: false,

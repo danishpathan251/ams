@@ -28,6 +28,11 @@ const Business = sequelize.define('Business', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  
   pincode: {
     type: DataTypes.STRING, // VARCHAR to support leading zeros
     allowNull: false,
