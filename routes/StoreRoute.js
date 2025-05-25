@@ -77,7 +77,7 @@ router.delete('/stores/:id', async (req, res) => {
 router.get('/stores/business/:businessId', async (req, res) => {
   try {
     const { businessId } = req.params;
-    const stores = await Store.findAll({ where: { businessId } });
+    const stores = await Store.findAll({ where: { businessid:businessId } });
 
     if (stores.length === 0) {
       return res.status(404).json({ message: 'No stores found for this business ID' });
