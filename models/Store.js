@@ -41,6 +41,10 @@ const Store = sequelize.define('Store', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  geometry: {
+    type: DataTypes.GEOMETRY,
+    allowNull: false,
+  },
 }, {
   tableName: 'stores',
   timestamps: true, // adds createdAt and updatedAt

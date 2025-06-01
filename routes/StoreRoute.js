@@ -57,6 +57,26 @@ router.put('/stores/:id', async (req, res) => {
   }
 });
 
+router.put('/store-geometry-update', async (req, res) => {
+  try {
+    const { id, geometry } = req.body;
+
+    const [updated] = await Store.update(
+      { geometry: geometry },
+      { where: { storeid: id } }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Store not found or not updated' });
+    }
+
+    const updatedStore = await Store.findOne({ where: { storeid: id } });
+
+    res.status(200).json({ message: 'Store updated successfully', store: updatedStore });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update store', error: err.message });
+  }
+});
 // ✅ 5. Delete Store
 router.delete('/stores/:id', async (req, res) => {
   try {

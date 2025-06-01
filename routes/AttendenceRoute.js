@@ -23,6 +23,44 @@ router.get('/attendance-logs/date/:date', async (req, res) => {
   }
 });
 
+// POST /attendance-logs/range
+router.post('/attendance-logs/range', async (req, res) => {
+  try {
+    const { startDate, endDate } = req.body;
+
+    // ✅ Basic Validation
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: 'startDate and endDate are required' });
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (isNaN(start) || isNaN(end)) {
+      return res.status(400).json({ message: 'Invalid date format' });
+    }
+
+    if (start > end) {
+      return res.status(400).json({ message: 'startDate must be before endDate' });
+    }
+
+    // ✅ Query the database
+    const logs = await AttendanceLog.findAll({
+      where: {
+        date: {
+          [Op.between]: [start, end],
+        },
+      },
+    });
+
+    res.status(200).json({message:'Successfully Fetched!',data:logs});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch logs', error: err.message });
+  }
+});
+
+
 // ✅ 3. Get Log by ID
 router.get('/attendance-logs/:id', async (req, res) => {
   try {
