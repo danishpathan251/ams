@@ -3,9 +3,12 @@ const router = express.Router();
 const AttendanceLog = require('../models/AttendanceLog'); // Adjust the path
 
 // ✅ 1. Get All Logs
-router.get('/attendance-logs', async (req, res) => {
+router.get('/attendance-logs/:empId', async (req, res) => {
+  const {empId} = req.params;
   try {
-    const logs = await AttendanceLog.findAll();
+    const logs = await AttendanceLog.findAll({where:{
+      employee_id:empId
+    }});
     res.status(200).json(logs);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch logs', error: err.message });
@@ -140,7 +143,38 @@ router.get('/attendance-logs/employee/:employee_id/date/:date', async (req, res)
   }
 });
 
-module.exports = router;
+router.post('/create-attendance-log', async (req, res) => {
+  const { type, time, empId } = req.body;
+
+  try {
+    const timestamp = new Date(); // current date-time
+    const dateOnly = timestamp.toISOString().split('T')[0]; // extract date
+
+    const newLog = {
+      employeeId: empId,           // make sure your model uses camelCase
+      logType: type,               // same here
+      timestamp: timestamp,
+      date: dateOnly,
+      time: time,
+      remarks: '',
+    };
+
+    const log = await AttendanceLog.create(newLog);
+
+    res.status(201).json({
+      success: true,
+      message: 'Log created successfully',
+      data: log,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create log',
+      error: err.message,
+    });
+  }
+});
+
 
 
 module.exports = router;

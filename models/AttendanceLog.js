@@ -1,19 +1,20 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // adjust the path to your Sequelize config
-
+const sequelize = require('../config/db'); // adjust as needed
 const AttendanceLog = sequelize.define('AttendanceLog', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  employee_id: {
+  employeeId: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    field: 'employee_id', // maps to DB column
   },
-  log_type: {
+  logType: {
     type: DataTypes.ENUM('check-in', 'check-out', 'break-in', 'break-out'),
     allowNull: false,
+    field: 'log_type',
   },
   timestamp: {
     type: DataTypes.DATE,
@@ -22,6 +23,10 @@ const AttendanceLog = sequelize.define('AttendanceLog', {
   },
   date: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  time: {
+    type: DataTypes.TIME,
     allowNull: false,
   },
   remarks: {
@@ -33,10 +38,14 @@ const AttendanceLog = sequelize.define('AttendanceLog', {
   timestamps: false,
 });
 
-// Automatically set the 'date' field based on 'timestamp'
+
+// Set the 'date' and 'time' based on 'timestamp' if not provided
 AttendanceLog.beforeCreate((log) => {
   if (!log.date && log.timestamp) {
-    log.date = new Date(log.timestamp).toISOString().split('T')[0];
+    log.date = log.timestamp.toISOString().split('T')[0];
+  }
+  if (!log.time && log.timestamp) {
+    log.time = log.timestamp.toTimeString().split(' ')[0];
   }
 });
 

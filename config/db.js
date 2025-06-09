@@ -5,7 +5,7 @@ const sequelize = new Sequelize(
   'postgres',
   'danish',
   {
-    host: '43.204.112.24',
+    host: '65.1.243.104',
     port: 5432,
     dialect: 'postgres',
     logging: false, // Optional: disable SQL logging
