@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Store = require('../models/Store'); // Adjust the path
-
+const User = require('../models/User')
 // ✅ 1. Get All Stores
 router.get('/stores', async (req, res) => {
   try {
@@ -106,6 +106,42 @@ router.get('/stores/business/:businessId', async (req, res) => {
     res.status(200).json(stores);
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch stores for business ID', error: err.message });
+  }
+});
+
+
+router.get("/fyById/:id", async (req, res) => {
+  try {
+    const storeId = req.params.id;
+
+    const list = await Store.findByPk(storeId);
+    if (!list) {
+      return res.status(404).json({ status: 'error', message: 'Store not found' });
+    }
+
+    const users = await User.findAll({ where: { storeId } });
+    const findManager = users.filter(user => user.role === 'manager');
+    const findEmployee = users.filter(user => user.role === 'employee');
+
+    const data = {
+      storeId: list.id || 'null',
+      storeName: list.storename || 'Downtown Electronics Store',
+      address: list.address || '123 Main Street, Downtown, City - 12345',
+      phoneNumber: list.phone || '+1 (555) 123-4567',
+      email: list.email || 'downtown@electrostore.com',
+      establishedYear: list.establishyear || 'Unknown',
+      totalEmployees: findEmployee.length || 0,
+      storeManager: findManager[0]?.fullname || 'Not Assigned',
+      operatingHours: list.workingtime || '9AM - 6PM',
+      storeRating: '-',           // Placeholder
+      monthlyRevenue: '-'        // Placeholder
+    };
+
+    res.send({ status: 'success', message: 'Data Fetched Successfully', data, storeUser:users });
+
+  } catch (e) {
+    console.error('Error While Fetching Data', e);
+    res.status(500).json({ status: 'error', message: e.message || 'Internal server error' });
   }
 });
 

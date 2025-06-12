@@ -1,6 +1,6 @@
 // models/attendancePlan.js
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const sequelize = require('../db'); // adjust the path to your sequelize instance
 
 class AttendancePlan extends Model {}
 
