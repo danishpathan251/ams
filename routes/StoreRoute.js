@@ -110,11 +110,11 @@ router.get('/stores/business/:businessId', async (req, res) => {
 });
 
 
-router.get("/fyById/:id", async (req, res) => {
+router.get("/find-store/:id", async (req, res) => {
   try {
     const storeId = req.params.id;
 
-    const list = await Store.findByPk(storeId);
+    const list = await Store.findOne({where:{storeid:storeId}});
     if (!list) {
       return res.status(404).json({ status: 'error', message: 'Store not found' });
     }
