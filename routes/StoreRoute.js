@@ -121,7 +121,8 @@ router.get('/store-details/business/:businessId', async (req, res) => {
     const newStore = stores.map(item => {
       return {
         id:item.storeid,
-        areaname:item.areaname,
+        name:item.storename,
+        location:item.areaname,
         status:'open',
         rating:4.5
 
