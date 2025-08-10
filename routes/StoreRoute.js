@@ -109,6 +109,30 @@ router.get('/stores/business/:businessId', async (req, res) => {
   }
 });
 
+router.get('/store-details/business/:businessId', async (req, res) => {
+  try {
+    const { businessId } = req.params;
+    const stores = await Store.findAll({ where: { businessid:businessId } });
+
+    if (stores.length === 0) {
+      return res.status(404).json({ message: 'No stores found for this business ID' });
+    }
+
+    const newStore = stores.map(item => {
+      return {
+        id:item.storeid,
+        areaname:item.areaname,
+        status:'open',
+        rating:4.5
+
+      }
+    })
+    res.status(200).json(newStore);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch stores for business ID', error: err.message });
+  }
+});
+
 
 router.get("/find-store/:id", async (req, res) => {
   try {
