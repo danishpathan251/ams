@@ -60,6 +60,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+
+
+
 // UPDATE event by id
 router.put('/:id', async (req, res) => {
   try {
@@ -96,5 +99,28 @@ router.delete('/:id', async (req, res) => {
     return sendResponse(res, false, "Failed to delete event", null, 500);
   }
 });
+
+router.get('/get-events', async (req, res) => {
+  try {
+    const responseData = await Event.findAll({
+      attributes: ['title', 'date', 'location', 'from']
+    });
+
+    const mapEvents = responseData.map(item => ({
+      title: item.title,
+      date: item.date,
+      location: item.location,
+      from: item.from
+    }));
+
+    res.json(mapEvents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Something went wrong while fetching events.' });
+  }
+});
+
+
+
 
 module.exports = router;

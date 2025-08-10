@@ -176,5 +176,91 @@ router.post('/create-attendance-log', async (req, res) => {
 });
 
 
+router.get('/api/emp-data/:empId', async (req, res) => {
+  try {
+    const empId = req.params.empId;
+
+    // Fetch employee data
+    const empList = await User.findOne({ where: { id: empId } });
+
+    if (!empList) {
+      return res.status(404).json({ message: 'Employee not found' });
+    }
+
+    // Calculate date range: from 5 days ago to today
+    const toDate = moment().endOf('day').toDate();      // Today 23:59:59
+    const fromDate = moment().subtract(5, 'days').startOf('day').toDate(); // 5 days ago 00:00:00
+
+    // Get attendance logs for last 5 days
+    const AttendanceList = await AttendanceLog.findAll({
+      where: {
+        empId: empId,
+        date: {
+          [Op.between]: [fromDate, toDate]
+        }
+      },
+      order: [['date', 'DESC'], ['createdAt', 'ASC']]
+    });
+
+    // Filter today's logs
+    const todayDateStr = moment().format('YYYY-MM-DD');
+    const todayLogs = AttendanceList.filter(log => {
+      const logDateStr = moment(log.date).format('YYYY-MM-DD');
+      return logDateStr === todayDateStr;
+    });
+
+    // Extract PunchIn and PunchOut times
+    const punchIn = todayLogs.length > 0 ? todayLogs[0].time : null;
+    const punchOut = todayLogs.length > 1 ? todayLogs[todayLogs.length - 1].time : null;
+
+    // Optional: calculate total hours between punchIn and punchOut
+    let totalHours = null;
+    if (punchIn && punchOut) {
+      const inTime = moment(punchIn, 'HH:mm');
+      const outTime = moment(punchOut, 'HH:mm');
+      totalHours = moment.duration(outTime.diff(inTime)).asHours().toFixed(2);
+    }
+
+    // Sample recent attendance from last 5-day logs
+    const recentAttendances = AttendanceList.map(log => ({
+      date: moment(log.date).format('YYYY-MM-DD'),
+      status: 'Present', // You can adjust this logic based on your schema
+      punchIn: log.time, // Replace with actual punchIn field if needed
+      punchOut: '-',     // Replace if you track punchOut
+    }));
+
+    // Compose response
+    const responseData = {
+      personal_information: {
+        mobile: empList.mobile,
+        email: empList.email,
+        joinDate: empList.joinDate,
+      },
+      TodayStatus: {
+        PunchIn: punchIn,
+        PunchOut: punchOut,
+        totalHour: totalHours,
+      },
+      monthlysummary: {
+        presentDays: 5,  // You should calculate this
+        absentDays: 10,
+        lateDays: 15,
+        OverTime: 5, // Example data
+      },
+      leaveInformation: {
+        totalLeave: 10,
+        remaining: 4,
+        pending: 10,
+        used: 6,
+      },
+      recentAttendance: recentAttendances
+    };
+
+    res.status(200).json(responseData);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;
